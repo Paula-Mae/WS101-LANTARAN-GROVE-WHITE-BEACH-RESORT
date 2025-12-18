@@ -3,9 +3,8 @@ require_once("../../includes/initialize.php");
  if (!isset($_SESSION['ADMIN_ID'])){
  	redirect(WEB_ROOT ."admin/login.php");
  }
-//checkAdmin();
 $view = (isset($_GET['view']) && $_GET['view'] != '') ? $_GET['view'] : '';
-$title ="Reservation";
+$title ="Room";
 switch ($view) {
 	case 'list' :
 		$content    = 'list.php';		
@@ -18,6 +17,10 @@ switch ($view) {
 	case 'edit' :
 		$content    = 'edit.php';		
 		break;
+
+	case 'editpic' :
+	$content    = 'editpic.php';		
+	break;
     case 'view' :
 		$content    = 'view.php';		
 		break;

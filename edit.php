@@ -1,147 +1,137 @@
-<?php 
-require_once("../../includes/initialize.php");
 
+<?php
 
-if (isset($_POST['submit'])) {
-  # code...
-      $sql = "UPDATE `tblreservation` SET `TRANSDATE`='".date_format(date_create($_POST['TRANSDATE']),'Y-m-d h:i')."', `CONFIRMATIONCODE`='".$_POST['CONFIRMATIONCODE']."', `STATUS`='".$_POST['STATUS']."' WHERE `CONFIRMATIONCODE` ='" . $_GET['code'] ."'";
-      $mydb->setQuery($sql);
-      $mydb->executeQuery(); 
-
-      $guest = New Guest();
-      $guest->G_FNAME          = $_POST['name'];    
-      $guest->G_LNAME          = $_POST['last'];  
-      $guest->G_ADDRESS        = $_POST['address'] ;   
-      $guest->update($_GET['id']); 
-      message("Reservation has been updated!", "success");
-      redirect("index.php");
-}
-  
-$guest = New Guest();
-$res = $guest->single_guest($_GET['id']);
-
+// $_SESSION['id']=$_GET['id'];
+$rm = new Room();
+$result = $rm->single_room($_GET['id']);
 ?>
+<form class="form-horizontal well span6" action="controller.php?action=edit" enctype="multipart/form-data" method="POST">
 
-<h1 align="center">Edit Reservation</h1>
-
-<form class="form-horizontal" action="" method="post" onsubmit="return personalInfo()" name="personal" >
-    <!-- Main content -->
-    <section class="content">
-
-      <div class="row">
+	<fieldset>
+		<legend>Edit Room</legend>
+      
  
-        <!-- /.col -->
-        <div class="col-md-12">
-          <div class="box box-primary">
-    <br/>
-       
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
- 
-              <div class="table-responsive mailbox-messages">
-     <div><h2>Guest Information</h2></div>
-                <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "name">FIRST NAME:</label>
+          <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "ROOM">Name:</label>
 
-                        <div class="col-md-8">
-                          <input name="" type="hidden">
-                          <input name="name" type="text"  value="<?php echo $res->G_FNAME; ?>"class="form-control input-sm" id="name" />
-                        </div>
-                      </div>
-                    </div>  
-
-                      <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "last">LAST NAME:</label>
-
-                        <div class="col-md-8">
-                          <input name="last" type="text" value="<?php echo $res->G_LNAME; ?>" class="form-control input-sm" id="last" />
-                        </div>
-                      </div>
-                    </div> 
-
-                     <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "address">ADDRESS:</label>
-
-                        <div class="col-md-8">
-                          <input name="address" type="text" value="<?php echo $res->G_ADDRESS; ?>" class="form-control input-sm" id="address" />
-                        </div>
-                      </div>
-                    </div> 
-
-     <div><h2>Reservation Details</h2></div>
-     <?php
-$code = $_GET['code'];
-
-$query="SELECT * 
-        FROM  `tblreservation` WHERE  `CONFIRMATIONCODE` = '".$code."'";
-$mydb->setQuery($query);
-$res = $mydb->loadSingleResult();
-?>
-<!-- 3f84uq -->
-
-                    <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "TRANSDATE">Transaction Date:</label>
-                        <div class="col-md-8">
-                        <div class="input-group " >  
-                        <div class="input-group-addon"> 
-                              <i class="fa fa-calendar"></i>
-                            </div>
-                        <input id="datemask2" name="TRANSDATE"  value="<?php echo date_format(date_create($res->TRANSDATE),'m/d/Y H:m'); ?>" type="text" class="form-control input-sm datemask2"   data-inputmask="'alias': 'mm/dd/yyyy'" data-mask required>
-           
-                        </div>     
- 
-                         </div>
-                      </div>
-                    </div> 
-                    <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "CONFIRMATIONCODE">Confirmation Code:</label>
-
-                        <div class="col-md-8">
-                          <input name="CONFIRMATIONCODE" type="text" value="<?php echo $res->CONFIRMATIONCODE; ?>" class="form-control input-sm" id="CONFIRMATIONCODE" />
-                        </div>
-                      </div>
-                    </div> 
-                    <div class="form-group">
-                      <div class="col-md-10">
-                        <label class="col-md-4 control-label" for=
-                        "STATUS">Status:</label>
-
-                        <div class="col-md-8">
-                          <input name="STATUS" type="text" value="<?php echo $res->STATUS; ?>" class="form-control input-sm" id="STATUS" />
-                        </div>
-                      </div>
-                    </div> 
-                     <!-- /.box-body -->
-            
-            <div class="box-footer no-padding"> 
-                <div class="pull-right"> 
-                  <div class="btn-group">
-                   <input name="submit" type="submit" value="Save"  class="btn btn-primary" onclick="return personalInfo();"/>
-                     </div>
-                  <!-- /.btn-group -->
-                </div>
-                <!-- /.pull-right -->
+              <div class="col-md-8">
+                <input name="" type="hidden" value="">
+                 <input name="ROOMID" type="hidden" value="<?php echo $result->ROOMID; ?>">
+                 <input class="form-control input-sm" id="ROOM" name="ROOM" placeholder=
+                    "Room Name" type="text" value="<?php echo $result->ROOM; ?>">
               </div>
-   
-     
-              </div>
-              <!-- /.mail-box-messages -->
-            </div>
-           
             </div>
           </div>
-          <!-- /. box --> 
+
+          <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "ACCOMID">Accomodation:</label>
+
+              <div class="col-md-8">
+              <select class="form-control input-sm" name="ACCOMID" id="ACCOMID">  
+                <?php 
+                  $rm = new Accomodation();  
+                 $res =  $rm->single_accomodation($result->ACCOMID);
+                ?>
+
+                    <option selected="TRUE" value="<?php echo $res->ACCOMID; ?>"><?php echo $res->ACCOMODATION; ?></option>
+                    <?php
+                    
+                    $cur= $rm->listOfaccomodationNotIn($res->ACCOMID);
+                    foreach ($cur  as $accom) {
+                      echo '<option  value='.$accom->ACCOMID.'>'.$accom->ACCOMODATION.'</OPTION>';
+                    }
+
+                    ?>
+                  </select> 
+              </div>
+            </div>
           </div>
-    </section>
-    <!-- /.content -->
-  </form>
+
+          <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "ROOMDESC">Description:</label>
+
+              <div class="col-md-8">
+                <input name="" type="hidden" value="">
+                 <input class="form-control input-sm" id="ROOMDESC" name="ROOMDESC" placeholder=
+                    "Description" type="text" value="<?php echo $result->ROOMDESC; ?>">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "NUMPERSON">Number of Person:</label>
+
+              <div class="col-md-8">
+                <input class="form-control input-sm" id="NUMPERSON" name="NUMPERSON" placeholder=
+                    "Number of Person" type="text" value="<?php echo $result->NUMPERSON; ?>" onkeyup="javascript:checkNumber(this);">
+              </div>
+            </div>
+          </div>
+
+
+           <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "PRICE">Price:</label>
+
+              <div class="col-md-8"> 
+                <input class="form-control input-sm" id="PRICE" name="PRICE" placeholder=
+                    "Price" type="text" value="<?php echo $result->PRICE; ?>" onkeyup="javascript:checkNumber(this);">
+              </div>
+            </div>
+          </div>
+
+          <!--   <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "ROOMNUM">No. of Rooms:</label>
+
+              <div class="col-md-8">
+                <input name="" type="hidden" value=""> -->
+                 <input class="form-control input-sm" id="ROOMNUM" name="ROOMNUM" placeholder=
+                    "Room #" type="hidden" value="<?php echo $result->ROOMNUM; ?>">
+           <!--    </div>
+            </div>
+          </div>
+         -->
+         <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "image">Upload Image:</label>
+
+              <div class="col-md-8">
+              <input type="file" name="image" value="" id="image">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <img src="<?php echo isset($result->ROOMIMAGE) && !empty($result->ROOMIMAGE) && is_file($result->ROOMIMAGE) ? $result->ROOMIMAGE : '' ?>" alt="Room Image" class="img-thumbnail col-md-5 col-md-offset-3" style=>
+          </div>
+	
+		      <div class="form-group">
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "idno"></label>
+
+              <div class="col-md-8">
+                <button class="btn btn-primary" name="save" type="submit" >Save</button>
+              </div>
+            </div>
+          </div>
+
+			
+	</fieldset>	
+	
+</form>
+
+
+</div><!--End of container-->
+			
