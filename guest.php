@@ -6,45 +6,61 @@
 * Revised By:		
 */
 require_once(LIB_PATH.DS.'database.php');
-class Accomodation{
+class Guest{
 	
-	protected static $tbl_name = "tblaccomodation";
+	protected static $tbl_name = "tblguest";
 	function db_fields(){
 		global $mydb;
 		return $mydb->getFieldsOnOneTable(self::$tbl_name);
 	}
-	function listOfaccomodation(){
+	function listOfguest(){
 		global $mydb;
 		$mydb->setQuery("Select * from ".self::$tbl_name);
 		$cur = $mydb->loadResultList();
 		return $cur;
 	
 	}
-
-	function listOfaccomodationNotIn($id=0){
-		global $mydb;
-		$mydb->setQuery("Select * from  `tblaccomodation` Where `ACCOMID` <> {$id}" );
-		$cur = $mydb->loadResultList();
-		return $cur;
-	
-	}
-	function single_accomodation($id=0){
+	function single_guest($id=0){
 			global $mydb;
-			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `ACCOMID`= {$id} LIMIT 1");
+			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `GUESTID`= {$id} LIMIT 1");
 			$cur = $mydb->loadSingleResult();
 			return $cur;
 	}
-	function find_all_accomodation($name=""){
+	function find_all_guest($phone="", $email=""){
 			global $mydb;
 			$mydb->setQuery("SELECT * 
 							FROM  ".self::$tbl_name." 
-							WHERE  `ACCOMODATION` ='{$name}'");
+							WHERE  `phone` ='{$phone}' OR email='{email}'");
+	
 			$cur = $mydb->executeQuery();
 			$row_count = $mydb->num_rows($cur);//get the number of count
 			return $row_count;
 	}
+	static function guest_login($email="", $pass=""){
+			global $mydb;
+			$mydb->setQuery("SELECT *  FROM  ".self::$tbl_name."  WHERE  `G_UNAME` ='". $email ."' AND G_PASS='". $pass ."'"); 
+			$cur = $mydb->executeQuery();
+				if($cur==false){
+					die(mysql_error());
+				}
+			$row_count = $mydb->num_rows($cur);//get the number of count
+			 if ($row_count == 1){
+			 $found_user = $mydb->loadSingleResult(); 
+			    $_SESSION['GUESTID']	= $found_user->GUESTID;  
+				$_SESSION['name']	 	=  $found_user->G_FNAME ;        			
+				$_SESSION['last']    	=  $found_user->G_LNAME ;    			
+				$_SESSION['address']    =  $found_user->G_ADDRESS ;              
+				$_SESSION['phone']	  	=  $found_user->G_PHONE;           			
+				$_SESSION['username']  	=  $found_user->G_UNAME ;              	
+				$_SESSION['pass']   	=  $found_user->G_PASS ;  	
 
+	        	return true;
+				}else{
+					return false;
+				}	
+	}
 	
+
 	/*---Instantiation of Object dynamically---*/
 	static function instantiate($record) {
 		$object = new self;
@@ -126,7 +142,7 @@ class Accomodation{
 		}
 		$sql = "UPDATE ".self::$tbl_name." SET ";
 		$sql .= join(", ", $attribute_pairs);
-		$sql .= " WHERE ACCOMID=". $id;
+		$sql .= " WHERE GUESTID=". $id;
 	  $mydb->setQuery($sql);
 	 	if(!$mydb->executeQuery()) return false; 	
 		
@@ -135,7 +151,7 @@ class Accomodation{
 	public function delete($id=0) {
 		global $mydb;
 		  $sql = "DELETE FROM ".self::$tbl_name;
-		  $sql .= " WHERE ACCOMID=". $id;
+		  $sql .= " WHERE GUESTID=". $id;
 		  $sql .= " LIMIT 1 ";
 		  $mydb->setQuery($sql);
 		  

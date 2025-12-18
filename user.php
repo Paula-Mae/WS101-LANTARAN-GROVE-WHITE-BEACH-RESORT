@@ -6,44 +6,69 @@
 * Revised By:		
 */
 require_once(LIB_PATH.DS.'database.php');
-class Accomodation{
+class User{
 	
-	protected static $tbl_name = "tblaccomodation";
+	protected static $tbl_name = "tbluseraccount";
 	function db_fields(){
 		global $mydb;
 		return $mydb->getFieldsOnOneTable(self::$tbl_name);
 	}
-	function listOfaccomodation(){
+	function listOfmembers(){
 		global $mydb;
 		$mydb->setQuery("Select * from ".self::$tbl_name);
 		$cur = $mydb->loadResultList();
 		return $cur;
 	
 	}
-
-	function listOfaccomodationNotIn($id=0){
-		global $mydb;
-		$mydb->setQuery("Select * from  `tblaccomodation` Where `ACCOMID` <> {$id}" );
-		$cur = $mydb->loadResultList();
-		return $cur;
-	
-	}
-	function single_accomodation($id=0){
+	function single_user($id=0){
 			global $mydb;
-			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `ACCOMID`= {$id} LIMIT 1");
+			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `USERID`= {$id} LIMIT 1");
 			$cur = $mydb->loadSingleResult();
 			return $cur;
 	}
-	function find_all_accomodation($name=""){
+	function find_all_user($name=""){
 			global $mydb;
 			$mydb->setQuery("SELECT * 
 							FROM  ".self::$tbl_name." 
-							WHERE  `ACCOMODATION` ='{$name}'");
+							WHERE  `UNAME` ='{$name}'");
 			$cur = $mydb->executeQuery();
 			$row_count = $mydb->num_rows($cur);//get the number of count
 			return $row_count;
 	}
 
+	 static function AuthenticateUser($email="", $h_upass=""){
+		global $mydb;
+		$mydb->setQuery("SELECT * FROM `tbluseraccount` WHERE `USER_NAME`='" . $email . "' and `UPASS`='" . $h_upass ."' LIMIT 1");
+		$cur = $mydb->executeQuery();
+		$row_count = $mydb->num_rows($cur);//get the number of count
+		 if ($row_count == 1){
+		 $found_user = $mydb->loadSingleResult();
+		    $_SESSION['ADMIN_ID'] 	 		= $found_user->USERID;
+            $_SESSION['ADMIN_UNAME']    	= $found_user->UNAME;
+            $_SESSION['ADMIN_USERNAME']		= $found_user->USER_NAME;
+            $_SESSION['ADMIN_UPASS']		= $found_user->UPASS;
+            $_SESSION['ADMIN_UROLE']    	= $found_user->ROLE;
+        	return true;
+			}else{
+				return false;
+			}	
+				
+	} 	
+/* 	static function AuthenticateMember($email="", $h_upass=""){
+		global $mydb;
+		$res=$mydb->setQuery("SELECT * FROM `user_info` WHERE `email`='" . $email . "' and `pword`='" . $h_upass ."' LIMIT 1");
+		 $found_user = $mydb->loadSingleResult();
+		   $_SESSION['member_id'] = $found_user['member_id'];
+            $_SESSION['fName']     = $found_user['fName'];
+            $_SESSION['lName']     = $found_user['lName'];
+            $_SESSION['email']     = $found_user['email'];
+            $_SESSION['pword']     = $found_user['pword'];
+            $_SESSION['mm']        = $found_user['mm'];
+            $_SESSION['dd']        = $found_user['dd'];
+            $_SESSION['yy']        = $found_user['yy'];
+            $_SESSION['gender']    = $found_user['gender'];
+		return $found_user;	
+	} */	
 	
 	/*---Instantiation of Object dynamically---*/
 	static function instantiate($record) {
@@ -126,7 +151,7 @@ class Accomodation{
 		}
 		$sql = "UPDATE ".self::$tbl_name." SET ";
 		$sql .= join(", ", $attribute_pairs);
-		$sql .= " WHERE ACCOMID=". $id;
+		$sql .= " WHERE USERID=". $id;
 	  $mydb->setQuery($sql);
 	 	if(!$mydb->executeQuery()) return false; 	
 		
@@ -135,7 +160,7 @@ class Accomodation{
 	public function delete($id=0) {
 		global $mydb;
 		  $sql = "DELETE FROM ".self::$tbl_name;
-		  $sql .= " WHERE ACCOMID=". $id;
+		  $sql .= " WHERE USERID=". $id;
 		  $sql .= " LIMIT 1 ";
 		  $mydb->setQuery($sql);
 		  

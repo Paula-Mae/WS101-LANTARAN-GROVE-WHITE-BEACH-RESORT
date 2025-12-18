@@ -6,43 +6,27 @@
 * Revised By:		
 */
 require_once(LIB_PATH.DS.'database.php');
-class Accomodation{
+class Reservation{
 	
-	protected static $tbl_name = "tblaccomodation";
+	protected static $tbl_name = "tblreservation";
 	function db_fields(){
 		global $mydb;
 		return $mydb->getFieldsOnOneTable(self::$tbl_name);
 	}
-	function listOfaccomodation(){
+	function listOfreservation(){
 		global $mydb;
 		$mydb->setQuery("Select * from ".self::$tbl_name);
 		$cur = $mydb->loadResultList();
 		return $cur;
 	
 	}
-
-	function listOfaccomodationNotIn($id=0){
-		global $mydb;
-		$mydb->setQuery("Select * from  `tblaccomodation` Where `ACCOMID` <> {$id}" );
-		$cur = $mydb->loadResultList();
-		return $cur;
-	
-	}
-	function single_accomodation($id=0){
+	function single_reservation($id=0){
 			global $mydb;
-			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `ACCOMID`= {$id} LIMIT 1");
+			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `RESERVEID`= {$id} LIMIT 1");
 			$cur = $mydb->loadSingleResult();
 			return $cur;
 	}
-	function find_all_accomodation($name=""){
-			global $mydb;
-			$mydb->setQuery("SELECT * 
-							FROM  ".self::$tbl_name." 
-							WHERE  `ACCOMODATION` ='{$name}'");
-			$cur = $mydb->executeQuery();
-			$row_count = $mydb->num_rows($cur);//get the number of count
-			return $row_count;
-	}
+ 	 
 
 	
 	/*---Instantiation of Object dynamically---*/
@@ -117,6 +101,21 @@ class Accomodation{
 	  }
 	}
 
+	public function update_resevation($code='') {
+		global $mydb;
+		$attributes = $this->sanitized_attributes();
+		$attribute_pairs = array();
+		foreach($attributes as $key => $value) {
+		$attribute_pairs[] = "{$key}='{$value}'";
+		}
+		$sql = "UPDATE ".self::$tbl_name." SET ";
+		$sql .= join(", ", $attribute_pairs);
+		$sql .= " WHERE CONFIRMATIONCODE='". $code . "'";
+		$mydb->setQuery($sql);
+		if(!$mydb->executeQuery()) return false; 	
+		
+	}
+
 	public function update($id=0) {
 	  global $mydb;
 		$attributes = $this->sanitized_attributes();
@@ -126,7 +125,7 @@ class Accomodation{
 		}
 		$sql = "UPDATE ".self::$tbl_name." SET ";
 		$sql .= join(", ", $attribute_pairs);
-		$sql .= " WHERE ACCOMID=". $id;
+		$sql .= " WHERE RESERVEID=". $id;
 	  $mydb->setQuery($sql);
 	 	if(!$mydb->executeQuery()) return false; 	
 		
@@ -135,7 +134,7 @@ class Accomodation{
 	public function delete($id=0) {
 		global $mydb;
 		  $sql = "DELETE FROM ".self::$tbl_name;
-		  $sql .= " WHERE ACCOMID=". $id;
+		  $sql .= " WHERE RESERVEID=". $id;
 		  $sql .= " LIMIT 1 ";
 		  $mydb->setQuery($sql);
 		  

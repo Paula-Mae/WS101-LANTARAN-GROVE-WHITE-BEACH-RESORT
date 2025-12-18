@@ -6,39 +6,31 @@
 * Revised By:		
 */
 require_once(LIB_PATH.DS.'database.php');
-class Accomodation{
+class Room{
 	
-	protected static $tbl_name = "tblaccomodation";
+	protected static $tbl_name = "tblroom";
 	function db_fields(){
 		global $mydb;
 		return $mydb->getFieldsOnOneTable(self::$tbl_name);
 	}
-	function listOfaccomodation(){
+	function listOfroom(){
 		global $mydb;
 		$mydb->setQuery("Select * from ".self::$tbl_name);
 		$cur = $mydb->loadResultList();
 		return $cur;
 	
 	}
-
-	function listOfaccomodationNotIn($id=0){
-		global $mydb;
-		$mydb->setQuery("Select * from  `tblaccomodation` Where `ACCOMID` <> {$id}" );
-		$cur = $mydb->loadResultList();
-		return $cur;
-	
-	}
-	function single_accomodation($id=0){
+	function single_room($id=0){
 			global $mydb;
-			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `ACCOMID`= {$id} LIMIT 1");
+			$mydb->setQuery("SELECT * FROM ".self::$tbl_name." Where `ROOMID`= {$id} LIMIT 1");
 			$cur = $mydb->loadSingleResult();
 			return $cur;
 	}
-	function find_all_accomodation($name=""){
+	function find_all_room($name=""){
 			global $mydb;
 			$mydb->setQuery("SELECT * 
 							FROM  ".self::$tbl_name." 
-							WHERE  `ACCOMODATION` ='{$name}'");
+							WHERE  `ACCOMID` ='{$name}'");
 			$cur = $mydb->executeQuery();
 			$row_count = $mydb->num_rows($cur);//get the number of count
 			return $row_count;
@@ -126,7 +118,7 @@ class Accomodation{
 		}
 		$sql = "UPDATE ".self::$tbl_name." SET ";
 		$sql .= join(", ", $attribute_pairs);
-		$sql .= " WHERE ACCOMID=". $id;
+		$sql .= " WHERE ROOMID=". $id;
 	  $mydb->setQuery($sql);
 	 	if(!$mydb->executeQuery()) return false; 	
 		
@@ -135,7 +127,7 @@ class Accomodation{
 	public function delete($id=0) {
 		global $mydb;
 		  $sql = "DELETE FROM ".self::$tbl_name;
-		  $sql .= " WHERE ACCOMID=". $id;
+		  $sql .= " WHERE ROOMID=". $id;
 		  $sql .= " LIMIT 1 ";
 		  $mydb->setQuery($sql);
 		  
