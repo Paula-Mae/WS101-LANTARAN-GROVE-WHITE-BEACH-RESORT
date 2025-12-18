@@ -1,32 +1,38 @@
 <?php
-require_once("../../includes/initialize.php");
- if (!isset($_SESSION['ADMIN_ID'])){
- 	redirect(WEB_ROOT ."admin/login.php");
- }
+require_once("../includes/initialize.php"); 
+// $menus=array("Home Page"=>"home.php","About Us"=>"about.php","Booking"=>"booking.php","Admin"=>"services.php","Latest News"=>"latest.php","contacts"=>"contact.php");
 $view = (isset($_GET['view']) && $_GET['view'] != '') ? $_GET['view'] : '';
-$title ="User";
+$account = '../guest/update.php'; 
+$small_nav = '../theme/small-navbar.php';
 switch ($view) {
-	case 'list' :
-		$content    = 'list.php';		
+	case 'booking' :
+	    $title="Booking";
+		$content    = 'booking.php';		
 		break;
 
-	case 'add' :
-		$content    = 'add.php';		
+	case 'logininfo' :
+	    $title="Booking";
+		$content    = 'logininfo.php';		
+		break; 
+
+	case 'payment':
+	    $title="Booking";
+   		$content    = 'payment.php';		
 		break;
 
-	case 'edit' :
-		$content    = 'edit.php';		
+	case 'detail' :
+	    $title="Booking";
+		$content    = 'reservation.php';
 		break;
-    case 'view' :
-		$content    = 'view.php';		
+	case 'mpesa' :
+	    $title="Booking";
+		$content    = 'detail.php';
 		break;
 
 	default :
-		$content    = 'list.php';		
+	    $title="Booking";
+		$content    = 'booking.php';		
 }
-  include '../modal.php';
-require_once '../themes/backendTemplate.php';
-?>
-
-
-  
+include '../theme/template.php';
+// include  '../guest/update.php';
+?> 
