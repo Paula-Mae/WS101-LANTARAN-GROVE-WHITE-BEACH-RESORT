@@ -1,54 +1,34 @@
 <?php
-require_once("includes/initialize.php");
-$content='home.php';
-$view = (isset($_GET['p']) && $_GET['p'] != '') ? $_GET['p'] : '';
-$account = 'guest/update.php';
-$small_nav = 'theme/small-navbar.php';
+require_once("../../includes/initialize.php");
+ if (!isset($_SESSION['ADMIN_ID'])){
+ 	redirect(WEB_ROOT ."admin/login.php");
+ }
+$view = (isset($_GET['view']) && $_GET['view'] != '') ? $_GET['view'] : '';
+$title ="Room Type";
 switch ($view) {
+	case 'list' :
+		$content    = 'list.php';		
+		break;
 
-  case '1' :
-        $title="Home";  
-        $content='home.php';    
-    break;
-  case 'gallery' :
-    $title="Gallery"; 
-    $content ='gallery.php';
-    break;
-  case 'about' :
-      $title="About Us";  
-    $content = 'aboutus.php';   
-    break;
+	case 'add' :
+		$content    = 'add.php';		
+		break;
 
-   case 'rooms' :
-    $title="Rooms and Rates";  
-    $content ='room_rates.php';    
-    break;
+	case 'edit' :
+		$content    = 'edit.php';		
+		break;
+    case 'view' :
+		$content    = 'view.php';		
+		break;
 
-  case 'contact' :
-      $title="Contacts";  
-    $content ='contact.php';    
-    break;
-
- case 'booking' :
-      $title="Book A Room";  
-    $content ='bookAroom.php';    
-    break;
-        
-     case 'accomodation' :
-      $title="Accomodation";  
-      $content='accomodation.php';
-    break;  
-
-  case 'largeview' :
-      // $title="View";  
-    $content ='largeimg.php';
-    break;
-  default :
-      $title="Home";  
-    $content ='home.php';   
+	default :
+		$content    = 'list.php';		
 }
 
-require_once ('theme/template.php');
 
+  include '../modal.php';
+require_once '../themes/backendTemplate.php';
 ?>
- 
+
+
+  
