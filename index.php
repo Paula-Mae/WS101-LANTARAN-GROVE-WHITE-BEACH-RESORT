@@ -1,38 +1,49 @@
 <?php
-require_once("../includes/initialize.php"); 
-// $menus=array("Home Page"=>"home.php","About Us"=>"about.php","Booking"=>"booking.php","Admin"=>"services.php","Latest News"=>"latest.php","contacts"=>"contact.php");
-$view = (isset($_GET['view']) && $_GET['view'] != '') ? $_GET['view'] : '';
-$account = '../guest/update.php'; 
+require_once("../includes/initialize.php");
+$content='home.php';
+$view = (isset($_GET['p']) && $_GET['p'] != '') ? $_GET['p'] : '';
+$account = 'guest/update.php';
 $small_nav = '../theme/small-navbar.php';
 switch ($view) {
-	case 'booking' :
-	    $title="Booking";
-		$content    = 'booking.php';		
-		break;
 
-	case 'logininfo' :
-	    $title="Booking";
-		$content    = 'logininfo.php';		
-		break; 
+  case '1' :
+        $title="Home";  
+        $content='home.php';    
+    break;
+  case '2' :
+      $title="Gallery"; 
+    $content ='gallery.php';
+    break;
+  case '3' :
+      $title="About Us";  
+    $content = 'about.php';   
+    break;
 
-	case 'payment':
-	    $title="Booking";
-   		$content    = 'payment.php';		
-		break;
+  case 'contact' :
+      $title="Contacts";  
+    $content ='contact.php';    
+    break;
 
-	case 'detail' :
-	    $title="Booking";
-		$content    = 'reservation.php';
-		break;
-	case 'mpesa' :
-	    $title="Booking";
-		$content    = 'detail.php';
-		break;
+ case 'booking' :
+      $title="Book A Room";  
+    $content ='bookAroom.php';    
+    break;
+        
+     case 'accomodation' :
+      $title="Accomodation";  
+      $content='accomodation.php';
+    break;  
 
-	default :
-	    $title="Booking";
-		$content    = 'booking.php';		
+  case 'largeview' :
+      // $title="View";  
+    $content ='largeimg.php';
+    break;
+  default :
+      $title="Profile";  
+    $content ='inbox.php';   
 }
-include '../theme/template.php';
-// include  '../guest/update.php';
-?> 
+
+require_once '../theme/template.php';
+
+?>
+ 
