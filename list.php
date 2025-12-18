@@ -1,195 +1,122 @@
+<?php
+		check_message();
+			
+		?>
+<div class="container">
+<!-- <div class="panel panel-primary"> -->
+			<div class="panel-body">
+<form  method="post" action="processreservation.php?action=delete">
+	<table id="table" class="table table-striped" cellspacing="0">
+<thead>
+<tr>
+<td width="5%">#</td>	
+
+<td width="90"><strong>Guest</strong></td>
+<!--<td width="10"><strong>Confirmation</strong></td>-->
+<td width="80"><strong>Transaction Date</strong></td>
+<td width="80"><strong>Confimation Code</strong></td>
+<td width="70"><strong>Total Rooms</strong></td>
+<td width="80"><strong>Total Price</strong></td>
+<!-- <td width="80"><strong>Nights</strong></td> -->
+<td width="80"><strong>Status</strong></td>
+<td width="100"><strong>Action</strong></td>
+</tr>
+</thead>
+<tbody>
+<?php
  
-<div class="wrapper">
-  
- 
-    <form action="" method="POST" >
-    <!-- Main content -->
-    <section class="invoice">
-        <!-- title row -->
-      <div class="row">
-        <div class="col-xs-12">
-          <h2 class="page-header">
-            <i class="fa fa-globe"></i>  Dragon House Report
-            <small class="pull-right">Date: <?php echo date('m/d/Y'); ?></small>
-          </h2>
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- info row -->
-      <div class="row invoice-info">
-      <div class="col-sm-2 invoice-col">
-        
-      </div>
-        <div class="col-sm-2 invoice-col">
-          Room
-          <address>
-            <input class="form-control" size="20" type="text" value="<?php echo isset($_POST['txtsearch']) ? $_POST['txtsearch'] :'' ?>" Placeholder="Search For...." name="txtsearch" id="txtsearch">
-        </address>    
-      
-        </div>
-        <div class="col-sm-2 invoice-col">
-          Status
-          <address>
-            <div class="form-group">
-			  <select name="categ" class="form-control">
-			  	<option value="Checkedin" <?php echo isset($_POST['categ']) && $_POST['categ'] == 'Checkedin' ? 'selected' :'' ?>>Checkedin</option>
-        <option value="Checkedout" <?php echo isset($_POST['categ']) && $_POST['categ'] == 'Checkedout' ? 'selected' :'' ?>>Checkedout</option>
-        <option value="Arrival" <?php echo isset($_POST['categ']) && $_POST['categ'] == 'Arrival' ? 'selected' :'' ?>>Arrival</option>
-        <option value="Pending" <?php echo isset($_POST['categ']) && $_POST['categ'] == 'Pending' ? 'selected' :'' ?>>Pending</option>
-        <option value="Confirmed" <?php echo isset($_POST['categ']) && $_POST['categ'] == 'Confirmed' ? 'selected' :'' ?>>Confirmed</option>
-			  </select>
-		  </div>
-          </address>
-        </div>
+$mydb->setQuery("SELECT  p.`GUESTID`,`G_FNAME` ,  `G_LNAME` ,  `G_ADDRESS` ,  `TRANSDATE` ,  `CONFIRMATIONCODE` ,  `PQTY` ,  `SPRICE` ,`STATUS`
+				FROM  `tblpayment` p,  `tblguest` g
+				WHERE p.`GUESTID` = g.`GUESTID`   
+				ORDER BY p.`STATUS`='pending' desc ");
+$cur = $mydb->loadResultList();
+				  			 
+foreach ($cur as $result) {
+?>
+<tr>
+<td width="5%" align="center"></td>
+<td><?php echo $result->G_FNAME." ".$result->G_LNAME; ?></td>
+<td><?php echo $result->TRANSDATE; ?></td>  
+<td><?php echo $result->CONFIRMATIONCODE; ?></td>
+<td><?php echo $result->PQTY; ?></td>
+<td>&euro;<?php echo $result->SPRICE; ?></td>
+<td><?php echo $result->STATUS; ?></td> 
+ <td >
+	<?php 
+		if($result->STATUS == 'Confirmed'){ ?>
+		<!-- <a class="cls_btn" id="<?php echo $result->reservation_id; ?>" data-toggle='modal' href="#profile" title="Click here to Change Image." ><i class="icon-edit">test</a> -->
+			<a href="index.php?view=view&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">View</a>
+			<a href="controller.php?action=cancel&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">Cancel</a>
+			<a href="controller.php?action=checkin&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-success btn-xs" ><i class="icon-edit">Check in</a>
+			<a href="controller.php?action=delete&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-danger btn-xs"  ><i class="icon-edit">Delete</a>
+			<a href="index.php?view=edit&code=<?php echo $result->CONFIRMATIONCODE; ?>&id=<?php echo $result->GUESTID; ?>" class="btn btn-primary btn-xs"  ><i class="icon-edit">Edit</a>
+		<?php
+		}elseif($result->STATUS == 'Checkedin'){
+	?>
+			<a href="index.php?view=view&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">View</a>
+			<a href="controller.php?action=checkout&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-danger btn-xs" ><i class="icon-edit">Check out</a>
+			<a href="controller.php?action=delete&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-danger btn-xs"  ><i class="icon-edit">Delete</a>
+			<a href="index.php?view=edit&code=<?php echo $result->CONFIRMATIONCODE; ?>&id=<?php echo $result->GUESTID; ?>" class="btn btn-primary btn-xs"  ><i class="icon-edit">Edit</a>
+	<?php
+		}elseif($result->STATUS == 'Checkedout'){ ?>
+			<a href="index.php?view=view&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">View</a>
+			<a href="controller.php?action=delete&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-danger btn-xs"  ><i class="icon-edit">Delete</a>
+			<a href="index.php?view=edit&code=<?php echo $result->CONFIRMATIONCODE; ?>&id=<?php echo $result->GUESTID; ?>" class="btn btn-primary btn-xs"  ><i class="icon-edit">Edit</a>
+			
+	<?php }else{
+			?>
+			<a href="index.php?view=view&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">View</a>
+			<a href="controller.php?action=cancel&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-primary btn-xs" ><i class="icon-edit">Cancel</a>
+			<a href="controller.php?action=confirm&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-success btn-xs"  ><i class="icon-edit">Confirm</a>
+			<a href="controller.php?action=delete&code=<?php echo $result->CONFIRMATIONCODE; ?>" class="btn btn-danger btn-xs"  ><i class="icon-edit">Delete</a>
+			<a href="index.php?view=edit&code=<?php echo $result->CONFIRMATIONCODE; ?>&id=<?php echo $result->GUESTID; ?>" class="btn btn-primary btn-xs"  ><i class="icon-edit">Edit</a>
+	<?php
+		}
 
-        <!-- /.col -->
-        <div class="col-sm-2 invoice-col">
-          Checkedin
-          <address> 
-		  <div class="form-group">
-			 <input class="form-control date start " size="20" type="text" value="<?php echo (isset($_POST['start'])) ? $_POST['start'] : date('Y-m-d'); ?>" Placeholder="Check In" name="start" id="from" data-date="" data-date-format="yyyy-mm-dd" data-link-field="any" data-link-format="yyyy-mm-dd">
-		 </div>
-          </address>
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-2 invoice-col">
-        Checkedout
-        <address>
-        <div class="form-group"> 
-		      <input class="form-control date end " size="20" type="text" value="<?php echo (isset($_POST['end'])) ? $_POST['end'] : date('Y-m-d'); ?>"  name="end" id="end" data-date="" data-date-format="yyyy-mm-dd" data-link-field="any" data-link-format="yyyy-mm-dd">
-		  </div>
-		  
-        </address>
-
-        </div>
-        <!-- /.col -->
-           <!-- /.col -->
-        <div class="col-sm-2 invoice-col"> 
-        <br/>
-        <address>
-        <div class="form-group"> 
-        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-		  </div>
-		  
-        </address>
-
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-      <!-- title row -->
-      <div class="row">
-        <div class="col-xs-12">
-          <h2 class="page-header">
-            <i class="fa fa-globe"></i><?php echo (isset($_POST['categ'])) ? $_POST['categ'] : ''; ?>
-            <small class="pull-right"> <?php echo (isset($_POST['start'])) ? 'Checkedin Date :' .$_POST['start'] : ''; ?> <?php echo (isset($_POST['end'])) ? ' Checkedout Date :' .$_POST['end'] : ''; ?> </small>
-          </h2>
-        </div>
-        <!-- /.col -->
-      </div>
-   
-
-      <!-- Table row -->
-      <div class="row">
-        <div class="col-xs-12 col-md-12 table-responsive">
-          <table class="table table-striped">
-            <thead>
-            <tr>
-              <th>Guest</th>
-              <th>Room</th>
-              <th>Price</th>
-              <th>Arrival</th>
-              <th>Departure</th>
-              <th>Night(s)</th>
-              <th>Subtotal</th>
-            </tr>
-            </thead>
-            <tbody>
-             <?php
-	if(isset($_POST['submit'])){ 
-
-  
-	$sql ="SELECT * 
-		 FROM  `tblaccomodation` A,  `tblroom` RM,  `tblreservation` RS,  `tblpayment` P,  `tblguest` G
-		 WHERE A.`ACCOMID` = RM.`ACCOMID` 
-		 AND RM.`ROOMID` = RS.`ROOMID` 
-		 AND RS.`CONFIRMATIONCODE` = P.`CONFIRMATIONCODE` 
-     AND P.`GUESTID` = G.`GUESTID`  
-     AND DATE(`ARRIVAL`) >=  '".$_POST['start']."'
-		 AND DATE(`DEPARTURE`) <=  '".$_POST['end']."' AND P.STATUS='" .$_POST['categ']."'
-     AND CONCAT( `ACCOMODATION`, ' ', `ROOM` , ' ' , `ROOMDESC`) LIKE '%" .$_POST['txtsearch'] ."%'";
+	?>
 	
+	
+</td>
 
-  $mydb->setQuery($sql);
-	$res = $mydb->executeQuery();
-	$row_count = $mydb->num_rows($res);
-	$cur = $mydb->loadResultList();
+<?php }
+?>
+		<div class="modal fade" id="profile" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						
 
+						<div class="alert alert-info">Profile:</div>
+					</div>
 
-		if ($row_count >0){
-      			foreach ($cur as $result) {
-                $days =  dateDiff(date($result->ARRIVAL),date($result->DEPARTURE));
-                   ?>
-                  <tr> 
-                    <td><?php echo $result->G_FNAME . ' ' .  $result->G_LNAME;?></td>
-                    <td><?php echo $result->ACCOMODATION . ' [' .$result->ROOM.']' ;?></td>
-                    <td> &euro; <?php echo $result->PRICE;?></td>
-                    <td><?php echo date_format(date_create($result->ARRIVAL),'m/d/Y');?></td>
-                    <td><?php echo date_format(date_create($result->DEPARTURE),'m/d/Y');?></td>
-                    <td><?php echo ($days==0) ? '1' : $days;?></td>
-                    <td> &euro; <?php echo $result->RPRICE;?></td>
-                  </tr>
-                  <?php 
-                    @$tot += $result->RPRICE;
-                  } 
+					<form action="#"  method=
+					"post">
+						<div class="modal-body">
+					
+												
+								<div id="display">
+									
+										<p>ID : <div id="infoid"></div></p><br/>
+											Name : <div id="infoname"></div><br/>
+											Email Address : <div id="Email"></div><br/>
+											Gender : <div id="Gender"></div><br/>
+											Birthday : <div id="bday"></div>
+										</p>
+										
+								</div>
+						</div>
 
-                  }
-              }
-            ?>
-            </tbody>
-          </table>
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
+						<div class="modal-footer">
+							<button class="btn btn-default" data-dismiss="modal" type=
+							"button">Close</button>
+						</div>
+					</form>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
-      <div class="row">
-        <!-- accepted payments column -->
-        <div class="col-xs-6"> 
-        </div>
-        <!-- /.col -->
-        <div class="col-xs-6">
-          <p class="lead">Total Amount</p>
+</table>
 
-          <div class="table-responsive">
-            <table class="table">
-              <tr>
-                <th style="width:50%">Total:</th>
-                <td> &euro; <?php echo @$tot ; ?></td>
-              </tr> 
-            </table>
-          </div>
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
 </form>
-<form action="printreport.php" method="POST" target="_blank">
-<input type="hidden" name="txtsearch" value="<?php echo (isset($_POST['txtsearch'])) ? $_POST['txtsearch'] : ''; ?>">
- <input type="hidden" name="categ" value="<?php echo (isset($_POST['categ'])) ? $_POST['categ'] : ''; ?>">
-    <input type="hidden" name="start" value="<?php echo (isset($_POST['start'])) ? $_POST['start'] :  date('Y-m-d'); ?>">
-    <input type="hidden" name="end" value="<?php echo (isset($_POST['end'])) ? $_POST['end'] :  date('Y-m-d'); ?>">
-      <!-- this row will not appear when printing -->
-      <div class="row no-print">
-        <div class="col-xs-12"> 
-       <span class="pull-right"> <button type="submit" class="btn btn-primary"  ><i class="fa fa-print"></i> Print</button></span>  
-          </div>
-      </div>
-    </section>
-    </form>
-    <!-- /.content -->
-    <div class="clearfix"></div>
- 
+<!-- </div> -->
 </div>
-<!-- ./wrapper -->
- 
