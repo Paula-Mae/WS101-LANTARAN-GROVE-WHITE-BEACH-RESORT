@@ -1,26 +1,28 @@
-
 <?php
 
-// $_SESSION['id']=$_GET['id'];
-$rm = new Room();
-$result = $rm->single_room($_GET['id']);
+$_SESSION['id']=$_GET['id'];
+$user = new User();
+$res = $user->single_user($_SESSION['id']);
+
+
+ 
 ?>
-<form class="form-horizontal well span6" action="controller.php?action=edit" enctype="multipart/form-data" method="POST">
+
+<form class="form-horizontal well span6" action="controller.php?action=edit" method="POST">
 
 	<fieldset>
-		<legend>Edit Room</legend>
-      
- 
+		<legend>New User Account</legend>
+											
+          
           <div class="form-group">
             <div class="col-md-8">
               <label class="col-md-4 control-label" for=
-              "ROOM">Name:</label>
+              "UNAME">Name:</label>
 
               <div class="col-md-8">
-                <input name="" type="hidden" value="">
-                 <input name="ROOMID" type="hidden" value="<?php echo $result->ROOMID; ?>">
-                 <input class="form-control input-sm" id="ROOM" name="ROOM" placeholder=
-                    "Room Name" type="text" value="<?php echo $result->ROOM; ?>">
+              	<input name="USERID" type="hidden" value="<?php echo $res->USERID; ?>">
+                 <input class="form-control input-sm" id="UNAME" name="UNAME" placeholder=
+									  "Account Name" type="text" value="<?php echo $res->UNAME; ?>">
               </div>
             </div>
           </div>
@@ -28,95 +30,54 @@ $result = $rm->single_room($_GET['id']);
           <div class="form-group">
             <div class="col-md-8">
               <label class="col-md-4 control-label" for=
-              "ACCOMID">Accomodation:</label>
-
-              <div class="col-md-8">
-              <select class="form-control input-sm" name="ACCOMID" id="ACCOMID">  
-                <?php 
-                  $rm = new Accomodation();  
-                 $res =  $rm->single_accomodation($result->ACCOMID);
-                ?>
-
-                    <option selected="TRUE" value="<?php echo $res->ACCOMID; ?>"><?php echo $res->ACCOMODATION; ?></option>
-                    <?php
-                    
-                    $cur= $rm->listOfaccomodationNotIn($res->ACCOMID);
-                    foreach ($cur  as $accom) {
-                      echo '<option  value='.$accom->ACCOMID.'>'.$accom->ACCOMODATION.'</OPTION>';
-                    }
-
-                    ?>
-                  </select> 
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-md-8">
-              <label class="col-md-4 control-label" for=
-              "ROOMDESC">Description:</label>
-
-              <div class="col-md-8">
-                <input name="" type="hidden" value="">
-                 <input class="form-control input-sm" id="ROOMDESC" name="ROOMDESC" placeholder=
-                    "Description" type="text" value="<?php echo $result->ROOMDESC; ?>">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-md-8">
-              <label class="col-md-4 control-label" for=
-              "NUMPERSON">Number of Person:</label>
-
-              <div class="col-md-8">
-                <input class="form-control input-sm" id="NUMPERSON" name="NUMPERSON" placeholder=
-                    "Number of Person" type="text" value="<?php echo $result->NUMPERSON; ?>" onkeyup="javascript:checkNumber(this);">
-              </div>
-            </div>
-          </div>
-
-
-           <div class="form-group">
-            <div class="col-md-8">
-              <label class="col-md-4 control-label" for=
-              "PRICE">Price:</label>
+              "USERNAME">Username:</label>
 
               <div class="col-md-8"> 
-                <input class="form-control input-sm" id="PRICE" name="PRICE" placeholder=
-                    "Price" type="text" value="<?php echo $result->PRICE; ?>" onkeyup="javascript:checkNumber(this);">
+                 <input class="form-control input-sm" id="USERNAME" name="USERNAME" placeholder=
+									  "Username" type="text" value="<?php echo $res->USER_NAME; ?>">
               </div>
             </div>
           </div>
 
-          <!--   <div class="form-group">
+          <div class="form-group">
             <div class="col-md-8">
               <label class="col-md-4 control-label" for=
-              "ROOMNUM">No. of Rooms:</label>
+              "UPASS">Password:</label>
 
               <div class="col-md-8">
-                <input name="" type="hidden" value=""> -->
-                 <input class="form-control input-sm" id="ROOMNUM" name="ROOMNUM" placeholder=
-                    "Room #" type="hidden" value="<?php echo $result->ROOMNUM; ?>">
-           <!--    </div>
-            </div>
-          </div>
-         -->
-         <div class="form-group">
-            <div class="col-md-8">
-              <label class="col-md-4 control-label" for=
-              "image">Upload Image:</label>
-
-              <div class="col-md-8">
-              <input type="file" name="image" value="" id="image">
+              	<input name="deptid" type="hidden" value="">
+                 <input class="form-control input-sm" id="UPASS" name="UPASS" placeholder=
+									  "Account Password" type="Password" value="">
               </div>
             </div>
           </div>
           <div class="form-group">
-            <img src="<?php echo isset($result->ROOMIMAGE) && !empty($result->ROOMIMAGE) && is_file($result->ROOMIMAGE) ? $result->ROOMIMAGE : '' ?>" alt="Room Image" class="img-thumbnail col-md-5 col-md-offset-3" style=>
+            <div class="col-md-8">
+              <label class="col-md-4 control-label" for=
+              "ROLE">Role:</label> 
+              <div class="col-md-8">
+                <select class="form-control input-sm" name="ROLE" id="ROLE">
+                  <option <?php echo ($res->ROLE=='Administrator') ? 'SELECTED' : '';  ?> value="Administrator">Administrator</option>
+                  <option <?php echo ($res->ROLE=='Guest In-charge') ? 'SELECTED' : ''; ?> value="Guest In-charge">Guest In-charge</option>
+                 </select> 
+              </div>
+            </div>
           </div>
-	
-		      <div class="form-group">
+
+        <div class="form-group">
+          <div class="col-md-8">
+            <label class="col-md-4 control-label" for=
+            "Contact #:">Contact #::</label>
+
+            <div class="col-md-8">
+              <input name="deptid" type="hidden" value="">
+               <input class="form-control input-sm" id="PHONE" name="PHONE" placeholder=
+                  "Contact #:" type="text" value="<?php echo $res->PHONE; ?>">
+            </div>
+          </div>
+        </div>
+
+		  <div class="form-group">
             <div class="col-md-8">
               <label class="col-md-4 control-label" for=
               "idno"></label>
@@ -131,7 +92,4 @@ $result = $rm->single_room($_GET['id']);
 	</fieldset>	
 	
 </form>
-
-
-</div><!--End of container-->
-			
+ 

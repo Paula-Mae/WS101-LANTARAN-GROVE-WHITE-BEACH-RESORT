@@ -4,7 +4,7 @@ require_once("../../includes/initialize.php");
  	redirect(WEB_ROOT ."admin/login.php");
  }
 $view = (isset($_GET['view']) && $_GET['view'] != '') ? $_GET['view'] : '';
-$title ="Room";
+$title ="User";
 switch ($view) {
 	case 'list' :
 		$content    = 'list.php';		
@@ -17,10 +17,6 @@ switch ($view) {
 	case 'edit' :
 		$content    = 'edit.php';		
 		break;
-
-	case 'editpic' :
-	$content    = 'editpic.php';		
-	break;
     case 'view' :
 		$content    = 'view.php';		
 		break;
