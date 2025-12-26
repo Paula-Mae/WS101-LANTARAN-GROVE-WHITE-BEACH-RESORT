@@ -1,4 +1,5 @@
-<h1>About Us</h1>
+<!-- Added by Ronel on Dec 26, 2025 -->
+git status<h1>About Us</h1>
   <div class="intro">
     <div class="container">
       <div class="row row-eq-height">
