@@ -1,4 +1,4 @@
-
+<!-- Added by Ronel-->
 <form class="form-horizontal well span6" action="controller.php?action=add" method="POST">
 
 	<fieldset>
